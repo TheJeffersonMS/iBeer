@@ -17,11 +17,11 @@ class BeersWorker {
     }
     
     func fetchBeers(request: ListBeers.FetchBeers.Request, completionSuccess: @escaping ([Beer])-> Void, completionFailure:@escaping (Error?)-> Void) {
-        
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         let url = "\(request.endpoint)?page=\(request.page)&per_page=\(request.per_page)"
         Alamofire.request(url).validate().responseArray { (response: DataResponse<[Beer]>) in
             UIApplication.shared.isNetworkActivityIndicatorVisible = false
-            debugPrint("\nResquest: \(request) \n\nResponse: \(response.result.value?.toJSONString() ?? "")")
+            print("\nResquest: \(request) \n\nResponse: \(response.result.value?.toJSONString() ?? "")")
             if let result = response.result.value {
                 completionSuccess(result)
             } else {
@@ -32,11 +32,11 @@ class BeersWorker {
     }
     
     func getBeer(request: DetailsBeer.GetBeer.Request, completionSuccess: @escaping (Beer)-> Void, completionFailure:@escaping (Error?)-> Void) {
-        
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         let url = "\(request.endpoint)/\(request.id)"
         Alamofire.request(url).validate().responseArray { (response: DataResponse<[Beer]>) in
             UIApplication.shared.isNetworkActivityIndicatorVisible = false
-            debugPrint("\nResquest: \(request) \n\nResponse: \(response.result.value?.toJSONString() ?? "")")
+            print("\nResquest: \(request) \n\nResponse: \(response.result.value?.toJSONString() ?? "")")
             if let result = response.result.value?.first {
                 completionSuccess(result)
             } else {
