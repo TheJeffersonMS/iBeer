@@ -28,7 +28,7 @@ class ListBeersInteractor: ListBeersProtocol {
         let response = ListBeers.FetchBeers.Response(beers: response)
         self.presenter?.presentListBeers(response: response)
     }, completionFailure: { (error) in
-        // to do error 
+        self.presenter?.presentErrorMessage(error: error)
     })
   }
 }

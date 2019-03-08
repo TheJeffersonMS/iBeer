@@ -20,6 +20,8 @@ class ListBeersRouter {
         let main = UIStoryboard(name: "Main", bundle: nil)
         let detailBeerVC = main.instantiateViewController(withIdentifier: "DetailsBeerViewController") as? DetailsBeerViewController
         detailBeerVC?.interactor?.getBeer(request: DetailsBeer.GetBeer.Request.init(id: id))
-        viewController?.navigationController?.pushViewController(detailBeerVC!, animated: true)
+        if let vc = detailBeerVC {
+            viewController?.navigationController?.pushViewController(vc, animated: true)
+        }
     }
 }

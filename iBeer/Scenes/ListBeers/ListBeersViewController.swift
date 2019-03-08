@@ -10,6 +10,7 @@ import UIKit
 
 protocol ListBeersDisplayLogic: class {
     func displayFetchedBeers(viewModel: ListBeers.FetchBeers.ViewModel)
+    func displayErrorMessage(error: Error)
 }
 
 class ListBeersViewController: UIViewController, ListBeersDisplayLogic, UITableViewDataSource, UITableViewDelegate {
@@ -18,18 +19,24 @@ class ListBeersViewController: UIViewController, ListBeersDisplayLogic, UITableV
     
     var interactor: ListBeersProtocol?
     var router:ListBeersRouter?
-    var displayedBeers: [ListBeers.FetchBeers.ViewModel.DisplayedBeer] = []
+    var displayedBeers: [ListBeers.FetchBeers.ViewModel.DisplayedBeer] = [] {
+        didSet {
+            tableView.isHidden = false
+            tableView.reloadData()
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setup()
-        interactor?.fetchBeers(request: ListBeers.FetchBeers.Request.init(page: 1, per_page: 20))
+        self.loadBeers()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
     func setup() {
         let viewController = self
         viewController.title = "Beers"
@@ -41,6 +48,7 @@ class ListBeersViewController: UIViewController, ListBeersDisplayLogic, UITableV
         interactor.presenter = presenter
         presenter.viewController = viewController
         router.viewController = viewController
+        tableView.isHidden = true
     }
     
     // MARK: - Table view data source
@@ -51,7 +59,9 @@ class ListBeersViewController: UIViewController, ListBeersDisplayLogic, UITableV
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let displayedBeer = displayedBeers[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ListBeersCell") as! ListBeersCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ListBeersCell") as? ListBeersCell else {
+            return UITableViewCell()
+        }
         cell.setCell(beer: displayedBeer)
         return cell
     }
@@ -61,9 +71,20 @@ class ListBeersViewController: UIViewController, ListBeersDisplayLogic, UITableV
         router?.routeToDetails(id: displayedBeer.id)
     }
     
+    func loadBeers() {
+        interactor?.fetchBeers(request: ListBeers.FetchBeers.Request.init(page: 1, per_page: 20))
+    }
+    
     func displayFetchedBeers(viewModel: ListBeers.FetchBeers.ViewModel) {
         displayedBeers = viewModel.displayedBeers
-        tableView.reloadData()
+    }
+    
+    func displayErrorMessage(error: Error) {
+        let alert = UIAlertController.init(title: "Atenção!", message: error.localizedDescription, preferredStyle: .alert)
+        alert.addAction(UIAlertAction.init(title: "Tentar Novamente", style: .default, handler: { (action) in
+            self.loadBeers()
+        }))
+        self.present(alert, animated: true, completion: nil)
     }
 }
 
