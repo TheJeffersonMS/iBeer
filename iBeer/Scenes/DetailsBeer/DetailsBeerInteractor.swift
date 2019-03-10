@@ -28,7 +28,7 @@ class DetailsBeerInteractor: DetailsBeerBusinessLogic {
             let response =  DetailsBeer.GetBeer.Response(beer: response)
             self.presenter?.presentDetailsBeer(response: response)
         }, completionFailure: { (error) in
-            // to do error
+            self.presenter?.presentErrorMessage(error: error)
         })
     }
 }

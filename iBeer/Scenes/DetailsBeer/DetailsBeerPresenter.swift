@@ -13,22 +13,28 @@
 import UIKit
 
 protocol DetailsBeerPresentationLogic {
-  func presentDetailsBeer(response: DetailsBeer.GetBeer.Response)
+    func presentDetailsBeer(response: DetailsBeer.GetBeer.Response)
+    func presentErrorMessage(error: Error?)
 }
 
 class DetailsBeerPresenter: DetailsBeerPresentationLogic {
-  weak var viewController: DetailsBeerDisplayLogic?
-  
-  // MARK: Do something
-  
-  func presentDetailsBeer(response: DetailsBeer.GetBeer.Response) {
+    weak var viewController: DetailsBeerDisplayLogic?
     
-    let beer = response.beer
+    // MARK: Do something
     
-    if let image_url = beer.image_url, let name = beer.name, let abv = beer.abv, let tagline = beer.tagline, let ibu = beer.ibu, let description = beer.description {
-        let displayedBeer = DetailsBeer.GetBeer.ViewModel.DisplayedBeer.init(image_url: image_url, name: name, abv: "\(abv)", tagline: tagline, ibu: "\(ibu)", description: description)
-        let viewModel = DetailsBeer.GetBeer.ViewModel(displayedBeer: displayedBeer)
-        viewController?.displayDetailsBeer(viewModel: viewModel)
+    func presentDetailsBeer(response: DetailsBeer.GetBeer.Response) {
+        
+        let beer = response.beer
+        
+        if let image_url = beer.image_url, let name = beer.name, let abv = beer.abv, let tagline = beer.tagline, let ibu = beer.ibu, let description = beer.description {
+            let displayedBeer = DetailsBeer.GetBeer.ViewModel.DisplayedBeer.init(image_url: image_url, name: name, abv: "\(abv)", tagline: tagline, ibu: "\(ibu)", description: description)
+            let viewModel = DetailsBeer.GetBeer.ViewModel(displayedBeer: displayedBeer)
+            viewController?.displayDetailsBeer(viewModel: viewModel)
+        }
     }
-  }
+    func presentErrorMessage(error: Error?) {
+        if let error = error {
+            viewController?.displayErrorMessage(error: error)
+        }
+    }
 }

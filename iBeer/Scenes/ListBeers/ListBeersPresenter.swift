@@ -14,17 +14,31 @@ import UIKit
 
 protocol ListBeersPresentationLogic {
     func presentListBeers(response: ListBeers.FetchBeers.Response)
+    func representListBeers(response: ListBeers.FetchBeers.Response)
     func presentErrorMessage(error: Error?)
 }
 
 class ListBeersPresenter: ListBeersPresentationLogic {
     weak var viewController: ListBeersDisplayLogic?
-    
+    var displayedBeers: [ListBeers.FetchBeers.ViewModel.DisplayedBeer] = []
     // MARK: presentListBeers
     
     func presentListBeers(response: ListBeers.FetchBeers.Response) {
         
-        var displayedBeers: [ListBeers.FetchBeers.ViewModel.DisplayedBeer] = []
+        for beer in response.beers {
+            if let image_url = beer.image_url, let name = beer.name, let abv = beer.abv, let id = beer.id {
+                let displayedBeer = ListBeers.FetchBeers.ViewModel.DisplayedBeer.init(image_url: image_url, name: name, abv: "\(abv)", id: id)
+                displayedBeers.append(displayedBeer)
+            }
+        }
+        let viewModel = ListBeers.FetchBeers.ViewModel(displayedBeers: displayedBeers)
+        viewController?.displayFetchedBeers(viewModel: viewModel)
+    }
+    
+    func representListBeers(response: ListBeers.FetchBeers.Response) {
+        
+        displayedBeers = []
+        
         for beer in response.beers {
             if let image_url = beer.image_url, let name = beer.name, let abv = beer.abv, let id = beer.id {
                 let displayedBeer = ListBeers.FetchBeers.ViewModel.DisplayedBeer.init(image_url: image_url, name: name, abv: "\(abv)", id: id)

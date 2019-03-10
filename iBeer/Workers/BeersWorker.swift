@@ -22,7 +22,7 @@ class BeersWorker {
         Alamofire.request(url).validate().responseArray { (response: DataResponse<[Beer]>) in
             UIApplication.shared.isNetworkActivityIndicatorVisible = false
             print("\nResquest: \(request) \n\nResponse: \(response.result.value?.toJSONString() ?? "")")
-            if let result = response.result.value {
+            if let result = response.result.value, result.count > 0 {
                 completionSuccess(result)
             } else {
                 completionFailure(response.error)
