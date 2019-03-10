@@ -11,6 +11,7 @@
 //
 
 import UIKit
+import Alamofire
 
 protocol DetailsBeerDisplayLogic: class {
     func displayDetailsBeer(viewModel: DetailsBeer.GetBeer.ViewModel)
@@ -60,10 +61,15 @@ class DetailsBeerViewController: UIViewController, DetailsBeerDisplayLogic {
     func displayDetailsBeer(viewModel: DetailsBeer.GetBeer.ViewModel) {
         
         if let url = URL(string: viewModel.displayedBeer.image_url) {
-            self.beerImageView?.af_setImage(withURL: url, completion: { response in
-                self.beerImageView.setNeedsLayout()
-                self.beerImageView.backgroundColor = UIColor.clear
-            })
+            Alamofire.request(url, method: .get).validate().responseData { (responseData) in
+                if let data = responseData.data {
+                    self.beerImageView.image = UIImage(data: data)
+                    DispatchQueue.main.async {
+                        self.beerImageView.setNeedsLayout()
+                        self.beerImageView.backgroundColor = UIColor.clear
+                    }
+                }
+            }
         }
         
         self.nameLabel.text = viewModel.displayedBeer.name

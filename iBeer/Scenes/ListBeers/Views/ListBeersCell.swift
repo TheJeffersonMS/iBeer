@@ -7,11 +7,11 @@
 //
 
 import UIKit
-import AlamofireImage
+import Alamofire
 
 class ListBeersCell: UITableViewCell {
-
-    @IBOutlet weak var beerImageVIew: UIImageView!
+    
+    @IBOutlet weak var beerImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var abvLabel: UILabel!
     
@@ -23,11 +23,15 @@ class ListBeersCell: UITableViewCell {
     func setCell(beer:ListBeers.FetchBeers.ViewModel.DisplayedBeer) {
         
         if let url = URL(string: beer.image_url) {
-            self.beerImageVIew?.af_setImage(withURL: url, completion: { response in
-                self.setNeedsLayout()
-                self.beerImageVIew.backgroundColor = UIColor.clear
-            })
-            
+            Alamofire.request(url, method: .get).validate().responseData { (responseData) in
+                if let data = responseData.data {
+                    self.beerImageView.image = UIImage(data: data)
+                    DispatchQueue.main.async {
+                        self.setNeedsLayout()
+                        self.beerImageView.backgroundColor = UIColor.clear
+                    }
+                }
+            }
         }
         
         self.nameLabel.text = beer.name
@@ -38,6 +42,6 @@ class ListBeersCell: UITableViewCell {
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        
     }
 }

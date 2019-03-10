@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EB75B06FB7F2D40583F4DADEDEF44D48"
+               BlueprintIdentifier = "1CB3AEA47B28D85E8AE0055F1928D100"
                BuildableName = "Pods_iBeer.framework"
                BlueprintName = "Pods-iBeer"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -26,7 +26,6 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      language = ""
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
@@ -37,7 +36,6 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      language = ""
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
@@ -47,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "EB75B06FB7F2D40583F4DADEDEF44D48"
+            BlueprintIdentifier = "1CB3AEA47B28D85E8AE0055F1928D100"
             BuildableName = "Pods_iBeer.framework"
             BlueprintName = "Pods-iBeer"
             ReferencedContainer = "container:Pods.xcodeproj">
