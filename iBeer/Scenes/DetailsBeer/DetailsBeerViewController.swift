@@ -14,6 +14,7 @@ import UIKit
 
 protocol DetailsBeerDisplayLogic: class {
     func displayDetailsBeer(viewModel: DetailsBeer.GetBeer.ViewModel)
+    func displayErrorMessage(error: Error)
 }
 
 class DetailsBeerViewController: UIViewController, DetailsBeerDisplayLogic {
@@ -77,5 +78,20 @@ class DetailsBeerViewController: UIViewController, DetailsBeerDisplayLogic {
         self.abvLabel.backgroundColor = UIColor.clear
         self.ibuLabel.backgroundColor = UIColor.clear
         self.descriptionLabel.backgroundColor = UIColor.clear
+    }
+    
+    func displayErrorMessage(error: Error) {
+        var message = ""
+        if error.localizedDescription == "The Internet connection appears to be offline." {
+            message = "A conexão com a Internet parece estar off-line."
+        } else {
+            message = error.localizedDescription
+        }
+        
+        let alert = UIAlertController.init(title: "Atenção!", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction.init(title: "Voltar", style: .default, handler: { (action) in
+            self.navigationController?.popViewController(animated: true)
+        }))
+        self.present(alert, animated: true, completion: nil)
     }
 }

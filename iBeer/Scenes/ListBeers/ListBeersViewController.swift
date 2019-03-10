@@ -19,12 +19,15 @@ class ListBeersViewController: UIViewController, ListBeersDisplayLogic, UITableV
     
     var interactor: ListBeersProtocol?
     var router:ListBeersRouter?
+    private let refreshControl = UIRefreshControl()
     var displayedBeers: [ListBeers.FetchBeers.ViewModel.DisplayedBeer] = [] {
         didSet {
             tableView.isHidden = false
+            refreshControl.endRefreshing()
             tableView.reloadData()
         }
     }
+    var page = 1
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,6 +52,14 @@ class ListBeersViewController: UIViewController, ListBeersDisplayLogic, UITableV
         presenter.viewController = viewController
         router.viewController = viewController
         tableView.isHidden = true
+        
+        if #available(iOS 10.0, *) {
+            tableView.refreshControl = refreshControl
+        } else {
+            tableView.addSubview(refreshControl)
+        }
+        
+        refreshControl.addTarget(self, action: #selector(reloadBeers(_:)), for: .valueChanged)
     }
     
     // MARK: - Table view data source
@@ -71,8 +82,20 @@ class ListBeersViewController: UIViewController, ListBeersDisplayLogic, UITableV
         router?.routeToDetails(id: displayedBeer.id)
     }
     
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == displayedBeers.count - 1 {
+            page += 1
+            loadBeers()
+        }
+    }
+    
     func loadBeers() {
-        interactor?.fetchBeers(request: ListBeers.FetchBeers.Request.init(page: 1, per_page: 20))
+        interactor?.fetchBeers(request: ListBeers.FetchBeers.Request.init(page: page, per_page: 20))
+    }
+    
+    @objc func reloadBeers(_ sender: Any) {
+        page = 1
+        interactor?.refetchBeers(request: ListBeers.FetchBeers.Request.init(page: page, per_page: displayedBeers.count))
     }
     
     func displayFetchedBeers(viewModel: ListBeers.FetchBeers.ViewModel) {
@@ -80,7 +103,14 @@ class ListBeersViewController: UIViewController, ListBeersDisplayLogic, UITableV
     }
     
     func displayErrorMessage(error: Error) {
-        let alert = UIAlertController.init(title: "Atenção!", message: error.localizedDescription, preferredStyle: .alert)
+        var message = ""
+        if error.localizedDescription == "The Internet connection appears to be offline." {
+            message = "A conexão com a Internet parece estar off-line."
+        } else {
+            message = error.localizedDescription
+        }
+        
+        let alert = UIAlertController.init(title: "Atenção!", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction.init(title: "Tentar Novamente", style: .default, handler: { (action) in
             self.loadBeers()
         }))

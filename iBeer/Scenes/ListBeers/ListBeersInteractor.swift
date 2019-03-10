@@ -13,22 +13,33 @@
 import UIKit
 
 protocol ListBeersProtocol {
-  func fetchBeers(request: ListBeers.FetchBeers.Request)
+    func fetchBeers(request: ListBeers.FetchBeers.Request)
+    func refetchBeers(request: ListBeers.FetchBeers.Request)
 }
 
 class ListBeersInteractor: ListBeersProtocol {
-  var presenter: ListBeersPresentationLogic?
-  var worker: BeersWorker?
-  
-  // MARK: requests
-  
-  func fetchBeers(request: ListBeers.FetchBeers.Request) {
-    worker = BeersWorker()
-    worker?.fetchBeers(request: request, completionSuccess: { (response) in
-        let response = ListBeers.FetchBeers.Response(beers: response)
-        self.presenter?.presentListBeers(response: response)
-    }, completionFailure: { (error) in
-        self.presenter?.presentErrorMessage(error: error)
-    })
-  }
+    var presenter: ListBeersPresentationLogic?
+    var worker: BeersWorker?
+    
+    // MARK: requests
+    
+    func fetchBeers(request: ListBeers.FetchBeers.Request) {
+        worker = BeersWorker()
+        worker?.fetchBeers(request: request, completionSuccess: { (response) in
+            let response = ListBeers.FetchBeers.Response(beers: response)
+            self.presenter?.presentListBeers(response: response)
+        }, completionFailure: { (error) in
+            self.presenter?.presentErrorMessage(error: error)
+        })
+    }
+    
+    func refetchBeers(request: ListBeers.FetchBeers.Request) {
+        worker = BeersWorker()
+        worker?.fetchBeers(request: request, completionSuccess: { (response) in
+            let response = ListBeers.FetchBeers.Response(beers: response)
+            self.presenter?.representListBeers(response: response)
+        }, completionFailure: { (error) in
+            self.presenter?.presentErrorMessage(error: error)
+        })
+    }
 }
