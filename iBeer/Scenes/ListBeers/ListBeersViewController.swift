@@ -95,7 +95,7 @@ class ListBeersViewController: UIViewController, ListBeersDisplayLogic, UITableV
     
     @objc func reloadBeers(_ sender: Any) {
         page = 1
-        interactor?.refetchBeers(request: ListBeers.FetchBeers.Request.init(page: page, per_page: displayedBeers.count))
+        interactor?.refetchBeers(request: ListBeers.FetchBeers.Request.init(page: page, per_page: 20))
     }
     
     func displayFetchedBeers(viewModel: ListBeers.FetchBeers.ViewModel) {
@@ -103,14 +103,8 @@ class ListBeersViewController: UIViewController, ListBeersDisplayLogic, UITableV
     }
     
     func displayErrorMessage(error: Error) {
-        var message = ""
-        if error.localizedDescription == "The Internet connection appears to be offline." {
-            message = "A conexão com a Internet parece estar off-line."
-        } else {
-            message = error.localizedDescription
-        }
         
-        let alert = UIAlertController.init(title: "Atenção!", message: message, preferredStyle: .alert)
+        let alert = UIAlertController.init(title: "Atenção!", message: error.localizedDescription, preferredStyle: .alert)
         alert.addAction(UIAlertAction.init(title: "Tentar Novamente", style: .default, handler: { (action) in
             self.loadBeers()
         }))

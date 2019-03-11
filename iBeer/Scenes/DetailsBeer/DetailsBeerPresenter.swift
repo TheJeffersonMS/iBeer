@@ -26,7 +26,7 @@ class DetailsBeerPresenter: DetailsBeerPresentationLogic {
         
         let beer = response.beer
         
-        if let image_url = beer.image_url, let name = beer.name, let abv = beer.abv, let tagline = beer.tagline, let ibu = beer.ibu, let description = beer.description {
+        if let image_url = beer.image_url, let name = beer.name, let abv = beer.abv, let tagline = beer.tagline, let ibu = beer.ibu, let description = beer.descriptionInfo {
             let displayedBeer = DetailsBeer.GetBeer.ViewModel.DisplayedBeer.init(image_url: image_url, name: name, abv: "\(abv)", tagline: tagline, ibu: "\(ibu)", description: description)
             let viewModel = DetailsBeer.GetBeer.ViewModel(displayedBeer: displayedBeer)
             viewController?.displayDetailsBeer(viewModel: viewModel)
