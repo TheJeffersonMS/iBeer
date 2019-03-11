@@ -11,7 +11,7 @@ import ObjectMapper
 import AlamofireObjectMapper
 import Alamofire
 
-class Beer: Mappable {
+class Beer: NSObject, Mappable {
     
     var id: Int?
     var image_url: String?
@@ -19,7 +19,7 @@ class Beer: Mappable {
     var abv: Double?
     var tagline: String?
     var ibu: Int?
-    var description: String?
+    var descriptionInfo: String?
     
     required init?(map: Map) {
         
@@ -32,7 +32,7 @@ class Beer: Mappable {
         abv <- map["abv"]
         tagline <- map["tagline"]
         ibu <- map["ibu"]
-        description <- map["description"]
+        descriptionInfo <- map["description"]
     }
 
 }

@@ -87,14 +87,8 @@ class DetailsBeerViewController: UIViewController, DetailsBeerDisplayLogic {
     }
     
     func displayErrorMessage(error: Error) {
-        var message = ""
-        if error.localizedDescription == "The Internet connection appears to be offline." {
-            message = "A conexão com a Internet parece estar off-line."
-        } else {
-            message = error.localizedDescription
-        }
         
-        let alert = UIAlertController.init(title: "Atenção!", message: message, preferredStyle: .alert)
+        let alert = UIAlertController.init(title: "Atenção!", message: error.localizedDescription, preferredStyle: .alert)
         alert.addAction(UIAlertAction.init(title: "Voltar", style: .default, handler: { (action) in
             self.navigationController?.popViewController(animated: true)
         }))
